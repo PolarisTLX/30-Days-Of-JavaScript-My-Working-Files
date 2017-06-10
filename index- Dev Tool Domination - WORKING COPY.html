@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Regular
+    console.log('hello world!');
+
+    // Interpolated
+    console.log('Hello I am a %s string!','💩');  //replace emoticon with a var
+
+        //in ES6 with using BACKTICKS!!!! you can just do:
+        //console.log(`Hello I am a ${var} string!`);  //note backticks!
+
+    // Styled with CSS modification right in the JavaScript with ""%c"
+    console.log('%c I am some great text','font-size: 50px; background: red; text-shadow: 10px 10px 0 blue');
+
+
+    // warning!
+    console.warn("OH NOOO!");
+
+    // Error :|
+    console.error("OH NO I DISPLAYED AN ERROR!");
+
+    // Info.  This is supposed to display a blue ! mark, but does not seem to?
+    console.info('Crocodiles est 3-4 people per year?!?');
+
+    // Testing
+    console.assert(1 === 1, 'This will only fire if the statement is wrong');
+    console.assert(1 === 2, 'This will only fire if the statement is wrong');
+
+    const p = document.querySelector('p');
+    console.assert(p.classList.contains('ouch'), 'Another example that will fire if the assert statement is wrong');
+    console.assert(p.classList.contains('×BREAK×DOWN×'), 'Another example that will fire if the assert statement is wrong'); //???
+
+
+    // clearing. This clears all of the console once it runs. AVOID!!!
+    //console.clear();
+
+    // Viewing DOM Elements
+    console.log(p);
+    console.dir(p);  //this allows you to open it up in teh console and take a look at the class list etc.
+
+    // Grouping together
+    dogs.forEach(dog => {
+      console.log( `This is ${dog.name}`);
+      console.log( `They are ${dog.age} years old, which is ${dog.age * 7} in human years.`);
+    });
+
+    //now again, but grouped:
+    dogs.forEach(dog => {
+      //console.group(`${dog.name}`);
+      console.groupCollapsed(`${dog.name}`);    //Colapsed makes it smaller until you click to expand them
+      console.log( `This is ${dog.name}`);
+      console.log( `They are ${dog.age} years old, which is ${dog.age * 7} in human years.`);
+      console.groupEnd(`${dog.name}`);  //this has to be te same snippet that is used before in console.group
+    });
+
+
+    // counting
+    console.count('dog');
+    console.count('dog');
+    console.count('dog');
+    console.count('fluffy');
+    console.count('dog');
+    console.count('fluffy');
+
+    // timing. To see how long something takes
+    console.time('fetching data');
+    //example task:
+    fetch('https://api.github.com/users/wesbos')
+      .then(data => data.json())
+      .then(data => {
+        console.log(data);
+        console.timeEnd('fetching data');  //this needs to be the same string that was used above to start the timer
+      });
+
+
+    //last one but used many times already:
+    console.table(dogs);
+    //oddly this appears BEFORE the timing fetching task above?
+
+
+  </script>
+</body>
+</html>

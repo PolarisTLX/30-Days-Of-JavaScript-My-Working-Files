@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+
+const canvas = document.querySelector('#draw');
+
+//context
+const ctx = canvas.getContext('2d');
+
+//make it the size of the open window
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+ctx.strokeStyle = '#BADA55';
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+//ctx.lineWidth = 50;
+
+//this is our drawing trigger, which will be the pressed mouse button below
+
+let isDrawing = false;
+
+let lastX = 0;
+let lastY = 0;
+
+
+
+
+//AWESOME SIMPLE FUNCTION THAT COULD BE USED ALOT!!!
+//this records all the movements of the mouse on the screen
+//below is more functionality to apply as a CLICK and DRAG function!!! :D
+  //function draw(e){
+  //  console.log(e);
+  //}
+  //canvas.addEventListener('mousemove', draw);
+//END OF AWESOME FUNCTION
+
+
+function draw(e){
+  if (!isDrawing) return;  //if isDrawing is false (because the mouse is not being clicked), don't draw or stop drawing
+  console.log(e);
+
+  ctx.beginPath();
+
+  //start from current location
+  lastX = e.offsetX;
+  lastY = e.offsetY;
+
+// in ES6 this can be made into one line as:
+//[lastX, lastY] = [e.offsetX, e.offsetY];   //but I don't think I like this
+
+  ctx.moveTo(lastX, lastY);
+
+  //go to
+  ctx.lineTo(e.offsetX, e.offsetY);  //e.offsetX, e.offsetY is X / Y of current event
+  ctx.stroke();  //this is what makes the drawing appear on the screen
+
+  lastX = e.offsetX;  //getting this wrong causes all kinds of weird effects that could be fun!
+  lastY = e.offsetY;
+
+}
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mousedown', () => isDrawing = true);
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseout', () => isDrawing = false); //when mouse is off the screen
+
+</script>
+
+<style>
+  html, body {
+    margin:0;
+  }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+//this github file is the external source of all city names to look through
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+//create empty array that we will store the date in
+const cities = [];
+
+//new built in API in the browser called fetch, this is like $.getJSON  jQuery stuff
+//fetch returns a "promise" (this is new concept to learn)
+
+//const promi = fetch(endpoint);
+//console.log(promi);  //does not return data, returns promise, someting that will eventually come back from the fetch
+
+//fetch(endpoint)
+//  .then(blobofdata => blobofdata.json())
+//  .then(rawdata => console.log(rawdata));  //this consoles the massive array of cities
+//can also be written as one line:  fetch(endpoint).then(blobofdata => blobofdata.json()).then(rawdata => console.log(rawdata));
+
+//my version commented out to find error? think there actualyl isnt any just looks different in my browsers console
+// fetch(endpoint)
+//   .then(blobofdata => blobofdata.json())
+//   .then(rawdata => cities.push(...rawdata));
+
+fetch(endpoint)
+  .then(blob => blob.json())
+  .then(data => cities.push(...data))  //to seperate the raw data into individual entries to be pushed into our new array, need to used spread "..." which is part of ES6
+
+function findMatches(wordToMatch, cities){
+  return cities.filter(place => {
+    //here we need to figure out if the city or state matches what was searched
+    const regex = new RegExp(wordToMatch, 'gi');
+    return place.city.match(regex) || place.state.match(regex);
+  });
+}
+
+function displayMatches(){
+  //console.log(this.value);
+  const matchArray = findMatches(this.value, cities);
+  //console.log(matchArray);
+  const loopThrough = matchArray.map(place => {
+
+  //to highlight the portion that we typed in, where it exists in the results
+  const regex = new RegExp(this.value, 'gi');
+  const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`)
+  //note it is h-elle, not h-one, for highlight
+
+//repeat but to highlight the state portion as well
+  const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`)
+
+
+    //note below are BACKTICKS  below the tilda ~
+    //<li> is a list item
+    return `
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${commasInTheNumbers(place.population)}</span>
+      </li>
+    `;
+  }).join('');  //this is to turn the returned array into just a string
+
+  suggestions.innerHTML = loopThrough;
+}
+
+const searchInput = document.querySelector('.search');  //this is the input form box which has class = "search"
+const suggestions = document.querySelector('.suggestions');
+
+searchInput.addEventListener('change', displayMatches);  //this only initiates when clicking out
+searchInput.addEventListener('keyup', displayMatches); //this fires after after keystroke
+
+//this is to just add commas to break the numbers into 3 digits, like 52,000,000
+function commasInTheNumbers(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+</script>
+  </body>
+</html>

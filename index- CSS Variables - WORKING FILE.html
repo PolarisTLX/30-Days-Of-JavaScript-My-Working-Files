@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoped CSS Variables and JS</title>
+</head>
+<body>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+
+  <div class="controls">
+    <label for="spacing">Border Thickness:</label>
+    <input id="spacing" type="range" name="spacing" min="0" max="200" value="10" data-sizing="px">
+    <!--this bar is created by using type="range", then the value is there the tick goes on the slider based on the min an max attributes given-->
+    <!--px is because the suffix px is needed inthe CSS part, need this for our changes to be properly implemented when they occur-->
+
+    <label for="blur">Blur Effect:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="0" data-sizing="px">
+
+    <label for="base">Border Color</label>
+    <input id="base" type="color" name="base" value="#ffc600">
+  </div>
+
+  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+
+  <style>
+
+    /*
+      misc styles, nothing to do with CSS variables
+    */
+    :root{
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 0px;
+    }
+
+    img{
+      padding: var(--spacing);
+      background: var(--base);
+      /*the above is needed to produce the colored border*/
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      /*note hL, L , for highlight*/
+      color: var(--base);
+    }
+
+    body {
+      text-align: center;
+      background: #193549;
+      color: white;
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 50px;
+    }
+    h2{
+      font-size: 16px;
+    }
+
+    .controls {
+      margin-bottom: 50px;
+    }
+
+    input {
+      width:100px;
+    }
+  </style>
+
+  <script>
+
+  const inputs = document.querySelectorAll('.controls input');
+  //this gives us a nodelist, which is similar to an array but can't do as much with it
+
+  function handleUpdate(){
+    //console.log(this.value);    //this console log prints the value of the sliders and color picker (because they are all labeled "input" in html) when they have been moved/changed
+
+    const suffix = this.dataset.sizing || '';
+    //console.log(this.dataset);  it will take everything that has "data-" and put that into an object for you?
+    //dataset.suffix is for the sliders bars, || ' ' is "OR nothing", because the color picker has no suffix or anything
+
+    //from the ":root" in CSS, the same names "spacing, blur and base" is lsited as names in HTML
+    //console.log(this.name); //will print when your mouse hovers over either the sliders or the color picker
+    document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);  //note the ` below the tilda ~ on keyboard
+    //usually `--base or `--spacing, but we can make it variable and have the proper attribute pulled in with ${this.name}
+    //and then it's going to be set to this.value
+    //the + suffix is needed to add the px for the sliders to update properly
+
+  }
+
+  //listen for a change event on each of the inputs, when that is called, we then call function handleUpdate
+  //can use:  ...addEventListener('mousemove', ... can also be used for a faster response (don't have to finish selecting it before it updates, but this is like too fast)
+  inputs.forEach(input => input.addEventListener('change', handleUpdate));
+  inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+  // the => is a newer cleaner way to do a for loop
+
+  </script>
+
+</body>
+</html>
