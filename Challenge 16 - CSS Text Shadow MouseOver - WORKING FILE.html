@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+</head>
+<body>
+
+<!-- <div class="james">
+<h2>Hi James! 😄</h2>
+</div>
+<div class="james">
+<h2>Move your mouse over the text!</h2>
+</div> -->
+  <div class="hero">
+    <h1 contenteditable>🔥WOAH!</h1>
+  </div>
+
+  <!-- can see that we are only detecting move move on just the part above by creating a differently named one and moving mouse on that
+  <div class="NOThero">
+    <h1 contenteditable>🔥NOTWOAH!</h1>
+  </div>
+-->
+
+
+  <style>
+  html {
+    color:black;
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  /*.james{
+   display:flex;
+   justify-content: center;
+   align-items: center;
+   color:green;
+ }*/
+
+  .hero {
+    min-height: 100vh;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:black;
+  }
+
+  h1 {
+    text-shadow: 10px 10px 0 rgba(0,0,0,1);
+    font-size: 100px;
+  }
+  </style>
+
+<script>
+
+  //<h1 contenteditable> in the HTML seems to be improtant for this
+
+  const hero = document.querySelector('.hero');
+  const text = hero.querySelector('h1');
+
+  function shadow(e){
+    //console.log(e);
+    const width = hero.offsetWidth;
+    const height = hero.offsetHeight;
+    //could also do it in one line:  (but I prefer reading above)
+    //const {offsetWidth: width, offsetHeight: height} = hero;
+
+    const shadowLimit = 100;  //100px.  Is most shadow you want at the most extreme edges of the element the mouseover detection is on
+
+    let x = e.offsetX;
+    let y = e.offsetY;
+    //could also do it in one line:  (but I prefer reading above)
+    //let {offset: x, offset: y} = e;
+
+    //console.log(x,y);  //this is location / pixel co-ordiantes of mouse on "hero"
+
+    //PROBLEM:  if  the "hero" element has children elements in/on it, in this case the "h1" elements
+    //it will mess up the x/y co-ordinates when the mouse is over the children
+    //console.log(this, e.target);
+
+    if (this !== e.target) {
+      //"this" here is the <div class="hero">,
+      //the event.target is what gets triggered / what the mouse is hovering on which will change
+
+      //so if the e.target is not the same as the "this", apply this correctiong to the X & Y:
+      x = x + e.target.offsetLeft;  //how far off the the edge of the parent the e.target child is
+      y = y + e.target.offsetTop;   // 0 / 0  X / Y is the top left corner of the parent
+    }
+    //console.log(x,y);  //here you will see the X/Y values work properly despite existance of children
+
+
+  //for the shadowLimit, which is 100px, Left/Top extreme will be -50,  Right/Bottom extreme will be 50
+  const xShadowLimit = Math.round((x / width * shadowLimit) - (shadowLimit / 2));
+  const yShadowLimit = Math.round((y / height * shadowLimit) - (shadowLimit / 2));
+  //Math.round keeps these as whole numbers instead of having lots of decimal places
+
+  //console.log(xShadowLimit, yShadowLimit);  //now shadowLimit's x/y is 0/0 in top left corner, and 50/50 in bottom right corner
+
+  //text.style.textShadow = `10px 10px 0 red`;  //textshadow is a CSS feature that is `x-px y-px blur color`
+  //IT WORKS!!!
+  //this modifies the:  <div class="hero"><h1 contenteditable  to also have style="text-shadow: 10px 10px 0 1);"
+  text.style.textShadow = `
+    ${xShadowLimit}px ${yShadowLimit}px 0 rgb(44, 64, 200),
+    ${xShadowLimit * -1}px ${yShadowLimit *-1}px 0 rgb(36, 164, 50)`;
+   //to add more than one of different colors, don't have ; between multiple instances:
+
+
+  }
+
+  hero.addEventListener('mousemove', shadow); //when the mouse is moved over the "hero" element in HTML/CSS, we will run function called "shadow"
+
+</script>
+</body>
+</html>
