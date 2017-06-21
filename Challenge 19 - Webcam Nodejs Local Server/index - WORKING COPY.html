@@ -10,7 +10,7 @@
   <div class="photobooth">
     <div class="controls">
       <button onClick="takePhoto()">Take Photo</button>
-<!--       <div class="rgb">
+       <div class="rgb">
         <label for="rmin">Red Min:</label>
         <input type="range" min=0 max=255 name="rmin">
         <label for="rmax">Red Max:</label>
@@ -32,9 +32,9 @@
       </div> -->
     </div>
 
-    <canvas class="photo"></canvas>
-    <video class="player"></video>
-    <div class="strip"></div>
+    <canvas class="photo"></canvas>  <!-- images from teh video are temporarily stored  -->
+    <video class="player"></video>  <!--this is the live video from the webcam-->
+    <div class="strip"></div>  <!--this is where the final images are stored-->
   </div>
 
   <audio class="snap" src="http://wesbos.com/demos/photobooth/snap.mp3" hidden></audio>
