@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Synthesis</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="voiceinator">
+
+      <h1>The Voiceinator 5000</h1>
+
+      <select name="voice" id="voices">
+        <option value="">Select A Voice</option>
+      </select>
+
+      <label for="rate">Rate:</label>
+      <input name="rate" type="range" min="0" max="3" value="1" step="0.1">
+
+      <label for="pitch">Pitch:</label>
+
+      <input name="pitch" type="range" min="0" max="2" step="0.1">
+      <textarea name="text">Hello! Type here what you would like to have read to you 👍</textarea>
+      <button id="stop">Stop!</button>
+      <button id="speak">Speak</button>
+
+    </div>
+
+<script>
+  const msg = new SpeechSynthesisUtterance();
+  let voices = [];
+  const voicesDropdown = document.querySelector('[name="voice"]');
+  const options = document.querySelectorAll('[type="range"], [name="text"]');
+  const speakButton = document.querySelector('#speak');
+  const stopButton = document.querySelector('#stop');
+
+  //make the text that was inputed into the text form box by the user be the text that will be read
+  msg.text = document.querySelector('[name="text"]').value;
+  //but it still needs to be updated once a user types more and starts again
+
+//this populates the list of options of all the voices the user can select
+function populateVoices() {
+  voices = this.getVoices();
+  //console.log(voices);  //this shows all the available voices that can be used
+  const voiceOptions = voices
+    .filter(voice => voice.lang.includes('en'))
+    .map(voice => `<option value="${voice.name}">${voice.name}<${voice.lang}</option>`).join('');
+
+  voicesDropdown.innerHTML = voiceOptions; //this can simply be joined with the line above if you want to reduce it by one line
+
+
+}
+
+//to let the user select and change the voice
+function setVoice() {
+  //console.log('Changing voice');
+  //console.log(this.value); this shows us the name of the voices in the droplist
+  msg.voice = voices.find(voice => voice.name === this.value); //the finds the proper voicefile which corresponds to that name
+  toggle();
+}
+
+//to make it playback automatically or restart and play again once a selection is made
+function toggle() {
+  speechSynthesis.cancel();  //this stops the voice playback when something is changed
+  speechSynthesis.speak(msg);
+}
+
+
+//this is to change the pitch and rate of voice playback speed?
+//also for when the input text field is changed by the user
+function setOption(){
+  //console.log(this.name, this.value);  //shows what the rate and pitch gets set to
+  //this.name is the property that was changed by the user
+  //this.value is the value it was changed to
+
+  msg[this.name] = this.value;
+  //need to include this toggle(); to make it restart with the recently applied changes
+  toggle();
+}
+
+
+speechSynthesis.addEventListener('voiceschanged', populateVoices);
+
+//everytime the selection in the dropdown list is changed, do this:
+voicesDropdown.addEventListener('change', setVoice);
+
+//this is to change the pitch and rate of voice playback speed?
+//also for when the input text field is changed by the user
+options.forEach(option => option.addEventListener('change', setOption));
+
+//the make the buttons interactive:
+//see lines 36 and 37 for when they are selected by JavaScript
+speakButton.addEventListener('click', toggle);
+stopButton.addEventListener('click', () => toggle(false));
+//() => toggle(false) is needed to pass an argument to a function that cannot be done just on initial page-load
+
+</script>
+
+</body>
+</html>
