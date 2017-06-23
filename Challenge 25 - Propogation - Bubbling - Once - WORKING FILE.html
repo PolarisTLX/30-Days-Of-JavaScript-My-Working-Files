@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+</head>
+<body class="bod">
+
+  <div class="one">
+    <div class="two">
+      <div class="three">
+      </div>
+    </div>
+  </div>
+
+<style>
+  html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after { box-sizing: inherit; }
+
+  div {
+    width:100%;
+    padding:100px;
+  }
+
+  .one {
+    background: thistle;
+  }
+
+  .two {
+    background:mistyrose;
+  }
+
+  .three {
+    background:coral;
+  }
+</style>
+
+<button></button>
+<script>
+
+//want to listen for a click on all of the <div>'s
+const divs = document.querySelectorAll('div');
+const button = document.querySelector('button');
+
+function logText(e) {
+  console.log(this.classList.value);
+  //console.log(this);
+  //MIGHT BE SUPER USEFUL!!
+  //e.stopPropagation();  //this sops the clicks from bubbling up to everything an item is wrapped in
+}
+
+//document.body.addEventListener('click', logText);
+
+//divs.forEach(div => div.addEventListener('click', logText));
+
+// divs.forEach(div => div.addEventListener('click', logText, {
+//   capture: true }));
+//this "capture: true" means that the order in which things get logged/posted in reversed order
+
+divs.forEach(div => div.addEventListener('click', logText, {
+  once: true }));
+  //this "once: true" makes it so that this item can only be clicked on/ selected once and not again unless the the page is reloaded
+  //useful if you want something, like a button, that can only be selected once
+
+//if you only want a use to click that chosen button once:
+  button.addEventListener('click', () => {
+    console.log('Clicked!!!');
+  }, { once: true });
+
+
+</script>
+</body>
+</html>
