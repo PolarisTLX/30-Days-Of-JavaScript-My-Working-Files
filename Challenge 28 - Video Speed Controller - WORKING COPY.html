@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="https://www.dropbox.com/s/nf6jfkwck1glsyo/12%20-%20flex-wrapping-and-columns.mp4?dl=1" loop controls></video>
+    <div class="speed">
+      <div class="speed-bar">1×</div>
+    </div>
+  </div>
+
+<script>
+
+const speed = document.querySelector('.speed');  //in CSS
+//this is the vertical white bar
+const bar = speed.querySelector('.speed-bar');  //in CSS
+//this is the filled portion of the vertical white bar
+const video = document.querySelector('.flex');  //in HTML
+//this is the actual video
+
+speed.addEventListener('mousemove', function(e) {
+  //console.log(e); this logs the mouse co-ordinates
+  const y = e.pageY - this.offsetTop;
+  //need to compensate for where the top of the target white bar is
+  //it only works on the white bar because on line 26 it is speed.addEventLister
+  //"speed" is what we called the white bar
+  //console.log(y);
+
+  //turn those pixels into percent ammount
+  const percent = y / this.offsetHeight;
+  //console.log(percent);
+  const height = Math.round(percent * 100)+'%';
+  bar.style.height = height;  //this makes the blue filled portion follow your mouse
+
+  const min = 0.5; //slowest speed
+  const max = 2.5; //fastest speed
+  const playbackRate = percent * (max - min) + min;
+  bar.textContent = playbackRate.toFixed(1) + 'x';  //this updates the rate that is displayed, ex 1.5x
+
+  video.playbackRate = playbackRate; //this actually sets the video's rate
+
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Click and Drag</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="items">
+    <div class="item item1">01</div>
+    <div class="item item2">02</div>
+    <div class="item item3">03</div>
+    <div class="item item4">04</div>
+    <div class="item item5">05</div>
+    <div class="item item6">06</div>
+    <div class="item item7">07</div>
+    <div class="item item8">08</div>
+    <div class="item item9">09</div>
+    <div class="item item10">10</div>
+    <div class="item item11">11</div>
+    <div class="item item12">12</div>
+    <div class="item item13">13</div>
+    <div class="item item14">14</div>
+    <div class="item item15">15</div>
+    <div class="item item16">16</div>
+    <div class="item item17">17</div>
+    <div class="item item18">18</div>
+    <div class="item item19">19</div>
+    <div class="item item20">20</div>
+    <div class="item item21">21</div>
+    <div class="item item22">22</div>
+    <div class="item item23">23</div>
+    <div class="item item24">24</div>
+    <div class="item item25">25</div>
+  </div>
+
+<script>
+
+const slider = document.querySelector('.items');
+//.items is the <div> in the HTML that holds all of the targets
+let isDown = false;
+let startX;
+let scrollLeft;
+
+slider.addEventListener('mousedown', (e) => {
+  isDown = true;
+  slider.classList.add('active');
+
+  //console.log(e);  //this will give us the details, including x distance, of the mouse click event
+  startX = e.pageX - slider.offsetLeft;
+  //slider.offsetLeft is how far off are tageted item is margined from the left of the screen
+  scrollLeft = slider.scrollLeft;
+  //this is to keep track of if we have done any scrolling already or not
+
+
+});
+slider.addEventListener('mouseleave', () => {
+  isDown = false;
+  slider.classList.remove('active');
+});
+slider.addEventListener('mouseup', () => {
+  isDown = false;
+  slider.classList.remove('active');
+});
+slider.addEventListener('mousemove', (e) => {
+  if (!isDown) return;  //if isDown is false, don't do anything
+  //console.log(isDown);
+
+  e.preventDefault();
+  //this will prevent default behavior built into the browser when you click and drag, like text highlighting
+
+  const x = e.pageX - slider.offsetLeft;
+  //we are going to re-calculate the position x every time we move the mouse
+  //console.log(x, startX);
+  //note the curly brakets {}
+  //console.log({x, startX});  //this shows that x is moving, but startX remains static
+  const walk = x - startX;
+  //console.log(walk);
+
+  slider.scrollLeft = scrollLeft - walk;
+  //NOTE can add a multiplication like (walk*1.5) to make it scroll faster
+
+});
+
+</script>
+
+  </body>
+</html>
